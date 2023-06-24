@@ -13,7 +13,7 @@ public class PlayersQueue {
   }
   public static PlayersQueue getInstance(){
     if(queueInstance==null)
-      return new PlayersQueue();
+      queueInstance = new PlayersQueue();
     return queueInstance;
   }
   

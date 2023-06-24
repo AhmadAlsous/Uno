@@ -20,7 +20,7 @@ public class DrawPile {
   
   public static DrawPile getInstance() {
     if(drawPileInstance==null){
-      return new DrawPile();
+      drawPileInstance = new DrawPile();
     }
     return drawPileInstance;
   }

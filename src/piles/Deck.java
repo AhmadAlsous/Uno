@@ -17,7 +17,7 @@ public class Deck {
   
   public static Deck getInstance() {
     if(deckInstance==null)
-      return new Deck();
+      deckInstance = new Deck();
     return deckInstance;
   }
   

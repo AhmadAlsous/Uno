@@ -1,6 +1,7 @@
 package queue;
 
 import abstractCard.Card;
+import piles.DiscardPile;
 import piles.DrawPile;
 
 import java.util.ArrayList;
@@ -26,6 +27,11 @@ public class Player {
     }
   }
   
+  public void playCard(int num){
+    Card playedCard = cardList.remove(num);
+    DiscardPile.getInstance().addCard(playedCard);
+  }
+  
   public String getName() {
     return name;
   }
@@ -41,4 +47,5 @@ public class Player {
   public void setCardList(List<Card> cardList) {
     this.cardList = cardList;
   }
+  
 }

@@ -2,6 +2,9 @@ package utility;
 
 import abstractCard.Color;
 
+import java.util.Queue;
+import java.util.Stack;
+
 public class Utility {
   public static String getColor(Color c){
     switch (c){
@@ -34,6 +37,16 @@ public class Utility {
       s.append(" ");
     }
     return s.toString();
+  }
+  
+  public static <T> void reverseQueue(Queue<T> queue){
+    Stack<T> stack = new Stack<>();
+    while (!queue.isEmpty()) {
+      stack.push(queue.remove());
+    }
+    while (!stack.isEmpty()) {
+      queue.add(stack.pop());
+    }
   }
   
 }

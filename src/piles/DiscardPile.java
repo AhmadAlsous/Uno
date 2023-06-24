@@ -1,6 +1,7 @@
 package piles;
 
 import abstractCard.Card;
+import card.NumberedCard;
 
 import java.util.Stack;
 
@@ -14,7 +15,7 @@ public class DiscardPile {
   
   public static DiscardPile getInstance() {
     if(discardPileInstance==null){
-      return new DiscardPile();
+      discardPileInstance = new DiscardPile();
     }
     return discardPileInstance;
   }
@@ -26,5 +27,12 @@ public class DiscardPile {
   private void initializeDiscardPile(){
     Card c = DrawPile.getInstance().drawCard();
     cardStack.push(c);
+    if(!(c instanceof NumberedCard)){
+      initializeDiscardPile();
+    }
+  }
+  
+  public void addCard(Card card){
+    cardStack.push(card);
   }
 }

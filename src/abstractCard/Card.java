@@ -1,6 +1,10 @@
 package abstractCard;
 
+import card.NumberedCard;
+
 public interface Card {
-  void print();
   String getCardName();
+  
+  Boolean isValidCard(Card card);
+  
 }

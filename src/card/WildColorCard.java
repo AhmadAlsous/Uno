@@ -1,14 +1,23 @@
 package card;
 
 import abstractCard.WildCard;
+import queue.Player;
+import queue.PlayersQueue;
+
+import java.util.Queue;
+
+import static game.GameRound.nextPlayer;
 
 public class WildColorCard extends WildCard {
-  public void print(){
-    System.out.println("Wild");
+  @Override
+  public String getCardName() {
+    return "Wild";
   }
   
   @Override
-  public String getCardName() {
-    return "Wild ";
+  public void performAction() {
+    chooseColor();
+    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
+    nextPlayer(playerQueue);
   }
 }
