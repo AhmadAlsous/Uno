@@ -40,7 +40,11 @@ public class GameRound {
     printTopDiscardedCard(topDiscardedCard);
     if(!hasPlayableCard(player, topDiscardedCard)){
       System.out.println("You don't have a card to play, "+player.getName()+"! Drawing a card.");
-      player.drawCard();
+      Card drawnCard = player.drawCard();
+      if (canBePlayed(drawnCard,topDiscardedCard)){
+        playCard(player,drawnCard,player.getCardList().size()-1);
+        System.out.println("You can play this card.");
+      }
       Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
       nextPlayer(playerQueue);
     } else {

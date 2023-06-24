@@ -16,9 +16,10 @@ public class Player {
     this.cardList=new ArrayList<>();
   }
   
-  public void drawCard(){
+  public Card drawCard(){
     Card card = DrawPile.getInstance().drawCard();
     cardList.add(card);
+    return card;
   }
   
   public void drawCard(int num){
