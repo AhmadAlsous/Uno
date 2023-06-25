@@ -35,6 +35,12 @@ public class Player {
     DiscardPile.getInstance().addCard(playedCard);
   }
   
+  public void sayUno(){
+    if (cardList.size() == 2){
+    
+    }
+  }
+  
   public int getScore() {
     return score;
   }

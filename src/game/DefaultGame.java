@@ -4,19 +4,19 @@ import exceptions.InvalidInputException;
 import queue.Player;
 import queue.PlayersQueue;
 
-import java.util.Queue;
 import java.util.Scanner;
 
 public class DefaultGame extends Game{
-  private Player gameWinner;
   public DefaultGame(){
-    super();
+    Options defaultOptions=new Options();
+    setOptions(defaultOptions);
+    setPlayersQueue(PlayersQueue.getInstance().getQueue());
   }
   @Override
   public void play() {
-    GameRound round = new GameRound();
     while (!isGameOver()) {
-      round.playRound();
+      setGameRound(new GameRound(getPlayersQueue(), getOptions()));
+      getGameRound().playRound();
       if(isGameOver() || playMore().equals("n")){
         break;
       }
@@ -25,15 +25,14 @@ public class DefaultGame extends Game{
   }
   
   private Boolean isGameOver(){
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
     int maxScore = 0;
-    for (Player player : playerQueue){
+    for (Player player : getPlayersQueue()){
       if(player.getScore() >= maxScore){
         maxScore = player.getScore();
-        gameWinner = player;
+        setGameWinner(player);
       }
     }
-    return gameWinner.getScore() >= 500;
+    return getGameWinner().getScore() >= 500;
   }
   
   private String playMore(){
@@ -58,6 +57,6 @@ public class DefaultGame extends Game{
   private void displayWinner(){
     System.out.println();
     System.out.println("🎉🎉🎉🎉🎉");
-    System.out.println(gameWinner.getName().toUpperCase() + " HAS WON WITH A SCORE OF " + gameWinner.getScore() + "!!!!!");
+    System.out.println(getGameWinner().getName().toUpperCase() + " HAS WON WITH A SCORE OF " + getGameWinner().getScore() + "!!!!!");
   }
 }

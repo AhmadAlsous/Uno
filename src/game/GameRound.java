@@ -11,22 +11,29 @@ import piles.DrawPile;
 import queue.Player;
 import queue.PlayersQueue;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static utility.Display.printPlayerCards;
 import static utility.Display.printTopDiscardedCard;
 
 public class GameRound {
+  private DrawPile drawPile;
+  private DiscardPile discardPile;
+  private Queue<Player> playerQueue;
+  private Options options;
   private Card chosenCard;
   private Player roundWinner;
+  
+  public GameRound(Queue<Player> queue, Options o){
+    playerQueue = queue;
+    options = o;
+    drawPile = DrawPile.getInstance();
+    discardPile = DiscardPile.getInstance();
+  }
   public void playRound(){
     initializeRound();
     while (!isRoundOver()) {
-      Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
       Player currentPlayer = playerQueue.peek();
       printPlayerCards(currentPlayer);
       playTurn(currentPlayer);
@@ -41,19 +48,16 @@ public class GameRound {
   }
   
   public void initializeRound(){
-    Queue<Player> queue=PlayersQueue.getInstance().getQueue();
-    int numOfPlayers = queue.size();
-    Options options = new Options();
+    int numOfPlayers = playerQueue.size();
     int numOfCardsPerPlayer = options.getNumOfCardsPerPlayer();
     for(int i=0;i<numOfPlayers;i++){
-      Player player= queue.remove();
+      Player player= playerQueue.remove();
       player.drawCard(numOfCardsPerPlayer);
-      queue.add(player);
+      playerQueue.add(player);
     }
   }
   
   private Boolean isRoundOver(){
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
     for (Player player : playerQueue){
       if(player.getCardList().size() == 0){
         roundWinner = player;
@@ -64,7 +68,7 @@ public class GameRound {
   }
   
   private void playTurn(Player player){
-    Card topDiscardedCard = DiscardPile.getInstance().getTopCard();
+    Card topDiscardedCard = discardPile.getTopCard();
     printTopDiscardedCard(topDiscardedCard);
     if(!hasPlayableCard(player)){
       System.out.println("You don't have a card to play, " + player.getName() + "! Drawing a card.");
@@ -86,16 +90,14 @@ public class GameRound {
     System.out.println("Congrats " + roundWinner.getName() + "!!! You won this round 🎉");
     calculateScore();
     displayScores();
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
     for(Player player : playerQueue){
       player.clearCardList();
     }
-    DrawPile.getInstance().initializeDrawPile();
-    DiscardPile.getInstance().initializeDiscardPile();
+    drawPile.initializeDrawPile();
+    discardPile.initializeDiscardPile();
   }
   
   private void calculateScore(){
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
     for (Player player : playerQueue){
       for (Card card : player.getCardList()){
         roundWinner.incrementScore(card.getCardScore());
@@ -104,7 +106,6 @@ public class GameRound {
   }
   
   private void displayScores(){
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
     for (Player player : playerQueue) {
       System.out.println(player.getName() + "'s score: " + player.getScore());
     }
@@ -114,9 +115,17 @@ public class GameRound {
     Boolean validMove = false;
     while(!validMove) {
       try {
+        int cardNumber;
         System.out.println("Choose a card, " + player.getName());
-        Scanner input = new Scanner(System.in);
-        int cardNumber = input.nextInt();
+        String sayUno = sayUno(player);
+        if(player.getCardList().size() == 2 && sayUno.equalsIgnoreCase("Uno")) {
+          System.out.println("Good job! You remembered to say Uno.");
+          Scanner input = new Scanner(System.in);
+          cardNumber = input.nextInt();
+        }
+        else {
+          cardNumber = Integer.parseInt(sayUno);
+        }
         if (cardNumber <= 0 || cardNumber > player.getCardList().size()){
           throw new InvalidInputException("You chose an invalid card number.");
         }
@@ -138,9 +147,19 @@ public class GameRound {
     return 0;
   }
   
+  private String sayUno(Player player){
+    Scanner input = new Scanner(System.in);
+    String uno = input.next();
+    if (player.getCardList().size() == 2 && !uno.equalsIgnoreCase("Uno")){
+      System.out.println("You forgot to say Uno! You have to draw two cards.");
+      player.drawCard(2);
+    }
+    return uno;
+  }
+  
   private Boolean hasPlayableCard(Player player){
     List<Card> cardList = player.getCardList();
-    for(Card card:cardList){
+    for(Card card : cardList){
       if (canBePlayed(card)){
         return true;
       }
@@ -149,7 +168,7 @@ public class GameRound {
   }
   
   private Boolean canBePlayed(Card playerCard){
-    Card topCard = DiscardPile.getInstance().getTopCard();
+    Card topCard = discardPile.getTopCard();
     return playerCard.isValidCard(topCard);
   }
   

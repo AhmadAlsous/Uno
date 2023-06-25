@@ -17,7 +17,7 @@ public class Utility {
       case YELLOW:
         return "\u001B[43m";
         default:
-          throw new IllegalArgumentException("Illegal card color " + c);
+          throw new IllegalArgumentException("Illegal card color: " + c);
       }
     }
   public static final String STOP = "\u001B[0m";

@@ -6,4 +6,3 @@ public class GameDriver {
     game.play();
   }
 }
-
