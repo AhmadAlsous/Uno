@@ -18,6 +18,6 @@ public class WildColorCard extends WildCard {
   public void performAction() {
     chooseColor();
     Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer(playerQueue);
+    nextPlayer();
   }
 }

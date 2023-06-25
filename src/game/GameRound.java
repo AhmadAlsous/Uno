@@ -5,6 +5,7 @@ import abstractCard.Card;
 import abstractCard.WildCard;
 import card.NumberedCard;
 import piles.DiscardPile;
+import piles.DrawPile;
 import queue.Player;
 import queue.PlayersQueue;
 
@@ -18,84 +19,137 @@ import static UI.Display.printTopDiscardedCard;
 
 public class GameRound {
   private Card chosenCard;
-  public void startGame(){
-    PreGame preGame = new PreGame();
-    preGame.initializeGame();
-    while (true) {
+  private Player roundWinner;
+  public void playRound(){
+    initializeRound();
+    while (!isRoundOver()) {
       Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
       Player currentPlayer = playerQueue.peek();
       printPlayerCards(currentPlayer);
       playTurn(currentPlayer);
-      System.out.println("-------------------------------------");
+      System.out.println("-------------------------------------------------");
       try {
-        TimeUnit.MILLISECONDS.sleep(750);
+        TimeUnit.MILLISECONDS.sleep(650);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+    endRound();
+  }
+  
+  public void initializeRound(){
+    Queue<Player> queue=PlayersQueue.getInstance().getQueue();
+    int numOfPlayers = queue.size();
+    Options options = new Options();
+    int numOfCardsPerPlayer = options.getNumOfCardsPerPlayer();
+    for(int i=0;i<numOfPlayers;i++){
+      Player player= queue.remove();
+      player.drawCard(numOfCardsPerPlayer);
+      queue.add(player);
+    }
+  }
+  
+  private Boolean isRoundOver(){
+    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
+    for (Player player : playerQueue){
+      if(player.getCardList().size() == 0){
+        roundWinner = player;
+        return true;
+      }
+    }
+    return false;
   }
   
   private void playTurn(Player player){
     Card topDiscardedCard = DiscardPile.getInstance().getTopCard();
     printTopDiscardedCard(topDiscardedCard);
-    if(!hasPlayableCard(player, topDiscardedCard)){
-      System.out.println("You don't have a card to play, "+player.getName()+"! Drawing a card.");
+    if(!hasPlayableCard(player)){
+      System.out.println("You don't have a card to play, " + player.getName() + "! Drawing a card.");
       Card drawnCard = player.drawCard();
-      if (canBePlayed(drawnCard,topDiscardedCard)){
-        playCard(player,drawnCard,player.getCardList().size()-1);
+      System.out.println("You drew a " + drawnCard.toString());
+      if (canBePlayed(drawnCard)){
         System.out.println("You can play this card.");
+        playCard(player, player.getCardList().size()-1);
+      } else {
+        nextPlayer();
       }
-      Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-      nextPlayer(playerQueue);
     } else {
-      int cardNumber = chooseCard(player,topDiscardedCard);
-      playCard(player,chosenCard,cardNumber);
+      int cardNumber = chooseCard(player);
+      playCard(player, cardNumber);
     }
   }
   
-  private int chooseCard(Player player, Card topCard){
+  private void endRound(){
+    System.out.println("Congrats " + roundWinner.getName() + "!!! You won this round :)");
+    calculateScore();
+    displayScores();
+    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
+    for(Player player : playerQueue){
+      player.clearCardList();
+    }
+    DrawPile.getInstance().initializeDrawPile();
+    DiscardPile.getInstance().initializeDiscardPile();
+  }
+  
+  private void calculateScore(){
+    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
+    for (Player player : playerQueue){
+      for (Card card : player.getCardList()){
+        roundWinner.incrementScore(card.getCardScore());
+      }
+    }
+  }
+  
+  private void displayScores(){
+    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
+    for (Player player : playerQueue) {
+      System.out.println(player.getName() + "'s score: " + player.getScore());
+    }
+  }
+  
+  private int chooseCard(Player player){
     while(true) {
       System.out.println("Choose a card, " + player.getName());
       Scanner input = new Scanner(System.in);
       int cardNumber = input.nextInt();
       cardNumber--;
       chosenCard = player.getCardList().get(cardNumber);
-      if (canBePlayed(chosenCard, topCard)) {
+      if (canBePlayed(chosenCard)) {
         return cardNumber;
       }
       System.out.println("You can't play this card.");
     }
   }
   
-  private Boolean hasPlayableCard(Player player, Card topCard){
+  private Boolean hasPlayableCard(Player player){
     List<Card> cardList = player.getCardList();
     for(Card card:cardList){
-      if (canBePlayed(card, topCard)){
+      if (canBePlayed(card)){
         return true;
       }
     }
   return false;
   }
   
-  private Boolean canBePlayed(Card playerCard, Card topCard){
+  private Boolean canBePlayed(Card playerCard){
+    Card topCard = DiscardPile.getInstance().getTopCard();
     return playerCard.isValidCard(topCard);
   }
   
-  private void playCard(Player player, Card card, int cardNumber){
+  private void playCard(Player player, int cardNumber){
+    Card card = player.getCardList().get(cardNumber);
     player.playCard(cardNumber);
     if (card instanceof NumberedCard) {
-        Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-        nextPlayer(playerQueue);
-    } else if (card instanceof ActionCard){
-      ActionCard actionCard = (ActionCard) card;
+        nextPlayer();
+    } else if (card instanceof ActionCard actionCard){
       actionCard.performAction();
-    } else if (card instanceof WildCard) {
-      WildCard wildCard = (WildCard) card;
+    } else if (card instanceof WildCard wildCard) {
       wildCard.performAction();
     }
   }
   
-  public static void nextPlayer(Queue<Player> playerQueue){
+  public static void nextPlayer(){
+    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
     Player currentPlayer = playerQueue.remove();
     playerQueue.add(currentPlayer);
   }

@@ -12,10 +12,7 @@ public class DrawPile {
   private static DrawPile drawPileInstance;
   private Stack<Card> cardStack;
   private DrawPile(){
-    cardStack=new Stack<>();
-    Deck deck=Deck.getInstance();
-    initializeDrawPile(deck.getDeck());
-    Collections.shuffle(cardStack);
+    initializeDrawPile();
   }
   
   public static DrawPile getInstance() {
@@ -29,10 +26,13 @@ public class DrawPile {
     return cardStack.pop();
   }
   
-  private void initializeDrawPile(HashMap<String,Integer> deck){
+  public void initializeDrawPile(){
+    cardStack=new Stack<>();
+    HashMap<String,Integer> deck = Deck.getInstance().getDeck();
     for (String key : deck.keySet()) {
-      handleCardType(key,deck);
+      handleCardType(key, deck);
     }
+    Collections.shuffle(cardStack);
   }
   
   private void handleCardType(String cardType, HashMap<String,Integer> deck){

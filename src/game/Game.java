@@ -6,8 +6,8 @@ public abstract class Game {
     Options defaultOptions=new Options();
     setOptions(defaultOptions);
   }
-  public void setOptions(Options options){
-    this.options=options;
+  public void setOptions(Options o){
+    options=o;
   }
   public abstract void play();
 }

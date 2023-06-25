@@ -6,8 +6,8 @@ import abstractCard.Color;
 import abstractCard.WildCard;
 
 public class NumberedCard implements Card {
-  private int number;
-  private Color color;
+  private final int number;
+  private final Color color;
   
   public NumberedCard(int number, Color color) {
     this.number = number;
@@ -28,15 +28,23 @@ public class NumberedCard implements Card {
   
   @Override
   public Boolean isValidCard(Card topCard) {
-    if(topCard instanceof ActionCard){
-      ActionCard card2 = (ActionCard) topCard;
+    if(topCard instanceof ActionCard card2){
       return getColor() == card2.getColor();
     }
-    if(topCard instanceof WildCard){
-      WildCard card2 = (WildCard) topCard;
+    if(topCard instanceof WildCard card2){
       return getColor() == card2.getChosenColor();
     }
     NumberedCard card2 = (NumberedCard) topCard;
     return (getNumber() == card2.getNumber() || getColor() == card2.getColor());
+  }
+  
+  @Override
+  public int getCardScore() {
+    return number;
+  }
+  
+  @Override
+  public String toString() {
+    return color.toString().toLowerCase() + " " + getNumber() + " card.";
   }
 }

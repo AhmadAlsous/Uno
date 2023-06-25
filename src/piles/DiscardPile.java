@@ -9,7 +9,6 @@ public class DiscardPile {
   private static DiscardPile discardPileInstance;
   private Stack<Card> cardStack;
   private DiscardPile(){
-    cardStack=new Stack<>();
     initializeDiscardPile();
   }
   
@@ -24,7 +23,8 @@ public class DiscardPile {
     return cardStack.peek();
   }
   
-  private void initializeDiscardPile(){
+  public void initializeDiscardPile(){
+    cardStack = new Stack<>();
     Card c = DrawPile.getInstance().drawCard();
     cardStack.push(c);
     if(!(c instanceof NumberedCard)){

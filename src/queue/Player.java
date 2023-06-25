@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-  private String name;
+  private final String name;
   private List<Card> cardList;
+  private int score;
   
   public Player(String name){
-    this.name=name;
-    this.cardList=new ArrayList<>();
+    this.name = name;
+    this.cardList = new ArrayList<>();
+    this.score = 0;
   }
   
   public Card drawCard(){
@@ -33,20 +35,24 @@ public class Player {
     DiscardPile.getInstance().addCard(playedCard);
   }
   
-  public String getName() {
-    return name;
+  public int getScore() {
+    return score;
   }
   
-  public void setName(String name) {
-    this.name = name;
+  public void incrementScore(int score) {
+    this.score += score;
+  }
+  
+  public String getName() {
+    return name;
   }
   
   public List<Card> getCardList() {
     return cardList;
   }
   
-  public void setCardList(List<Card> cardList) {
-    this.cardList = cardList;
+  public void clearCardList(){
+    cardList = new ArrayList<>();
   }
   
 }

@@ -18,9 +18,9 @@ public class WildDrawFourCard extends WildCard {
   public void performAction() {
     chooseColor();
     Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer(playerQueue);
+    nextPlayer();
     playerQueue.peek().drawCard(4);
     System.out.println(playerQueue.peek().getName()+" has drawn four cards!");
-    nextPlayer(playerQueue);
+    nextPlayer();
   }
 }

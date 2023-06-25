@@ -1,5 +1,5 @@
 package abstractCard;
 
 public enum Color {
-  BLUE, GREEN, RED, YELLOW;
+  BLUE, GREEN, RED, YELLOW
 }

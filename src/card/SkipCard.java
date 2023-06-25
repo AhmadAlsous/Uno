@@ -21,9 +21,9 @@ public class SkipCard extends ActionCard {
   @Override
   public void performAction() {
     Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer(playerQueue);
+    nextPlayer();
     System.out.println(playerQueue.peek().getName()+" has been skipped!");
-    nextPlayer(playerQueue);
+    nextPlayer();
   }
   
 }

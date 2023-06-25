@@ -22,9 +22,9 @@ public class DrawTwoCard extends ActionCard {
   @Override
   public void performAction(){
     Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer(playerQueue);
+    nextPlayer();
     playerQueue.peek().drawCard(2);
     System.out.println(playerQueue.peek().getName()+" has drawn two cards!");
-    nextPlayer(playerQueue);
+    nextPlayer();
   }
 }

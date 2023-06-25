@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class PlayersQueue {
   private static PlayersQueue queueInstance;
-  private Queue<Player> queue;
+  private final Queue<Player> queue;
   private PlayersQueue(){
     queue=new LinkedList<>();
     initializeQueue();
@@ -37,7 +37,7 @@ public class PlayersQueue {
     }
   }
   
-  public Queue getQueue(){
+  public Queue<Player> getQueue(){
     return queue;
   }
 }

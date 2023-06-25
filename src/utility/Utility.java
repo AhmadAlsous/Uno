@@ -23,10 +23,9 @@ public class Utility {
   public static final String STOP = "\u001B[0m";
   public static final String BLACK_FONT = "\u001B[30m";
   public static final String WHITE = "\u001B[47m";
-  
   public static final int cardWidth = 11;
-  
   public static final int spaceBetweenCards = 2;
+  
   private Utility(){
     throw new AssertionError("This class should not be instantiated.");
   }

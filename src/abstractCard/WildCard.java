@@ -13,7 +13,10 @@ public abstract class WildCard implements Card{
     return true;
   }
   
-  public abstract void performAction();
+  @Override
+  public int getCardScore() {
+    return 50;
+  }
   
   public void chooseColor(){
     System.out.println("Choose a color: ");
@@ -32,4 +35,11 @@ public abstract class WildCard implements Card{
   public Color getChosenColor(){
     return chosenColor;
   }
+  
+  @Override
+  public String toString() {
+    return getCardName() + " card.";
+  }
+  
+  public abstract void performAction();
 }

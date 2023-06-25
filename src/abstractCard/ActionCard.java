@@ -3,7 +3,7 @@ package abstractCard;
 import card.NumberedCard;
 
 public abstract class ActionCard implements Card{
-  private Color color;
+  private final Color color;
   
   protected ActionCard(Color color){
     this.color=color;
@@ -13,24 +13,30 @@ public abstract class ActionCard implements Card{
     return color;
   }
   
-  public abstract String getCardName();
-  
   @Override
   public Boolean isValidCard(Card topCard) {
-    if(topCard instanceof NumberedCard){
-      NumberedCard card2 = (NumberedCard) topCard;
+    if(topCard instanceof NumberedCard card2){
       return (getColor() == card2.getColor());
     }
-    if(topCard instanceof ActionCard){
-      ActionCard card2 = (ActionCard) topCard;
+    if(topCard instanceof ActionCard card2){
       return (getColor() == card2.getColor() || getCardName().equals(card2.getCardName()));
     }
-    if(topCard instanceof WildCard){
-      WildCard card2 = (WildCard) topCard;
+    if(topCard instanceof WildCard card2){
       return getColor() == card2.getChosenColor();
     }
     return false;
   }
   
+  @Override
+  public int getCardScore() {
+    return 20;
+  }
+  
+  @Override
+  public String toString() {
+    return color.toString().toLowerCase() + " " + getCardName() + " card.";
+  }
+  
+  public abstract String getCardName();
   public abstract void performAction();
 }
