@@ -1,4 +1,4 @@
-package UI;
+package utility;
 
 import abstractCard.ActionCard;
 import abstractCard.Card;

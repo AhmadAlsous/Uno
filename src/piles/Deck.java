@@ -8,11 +8,12 @@ import java.util.HashMap;
 public class Deck {
   private static Deck deckInstance;
   private HashMap<String,Integer> deck;
+  private DeckInfo deckInfo;
   
   private Deck(){
     deck=new HashMap<>();
     DeckInfo defaultDeckOptions=new Options().getDeckOptions();
-    initializeDeck(defaultDeckOptions);
+    setDeckOptions(defaultDeckOptions);
   }
   
   public static Deck getInstance() {
@@ -21,7 +22,8 @@ public class Deck {
     return deckInstance;
   }
   
-  public void setDeck(DeckInfo deckOptions) {
+  public void setDeckOptions(DeckInfo deckOptions) {
+    deckInfo = deckOptions;
     initializeDeck(deckOptions);
   }
   

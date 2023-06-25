@@ -1,6 +1,7 @@
 package abstractCard;
 
 import card.NumberedCard;
+import exceptions.IllegalCardException;
 
 public abstract class ActionCard implements Card{
   private final Color color;
@@ -24,7 +25,7 @@ public abstract class ActionCard implements Card{
     if(topCard instanceof WildCard card2){
       return getColor() == card2.getChosenColor();
     }
-    return false;
+    throw new IllegalCardException("Invalid card type: " + topCard);
   }
   
   @Override

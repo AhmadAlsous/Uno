@@ -9,7 +9,7 @@ public class Options {
   public Options(){
     DeckInfo defaultDeckOptions = new DeckInfo();
     setDeckOptions(defaultDeckOptions);
-    setNumOfCardsPerPlayer(1);
+    setNumOfCardsPerPlayer(7);
   }
   
   public DeckInfo getDeckOptions() {

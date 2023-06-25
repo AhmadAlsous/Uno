@@ -1,5 +1,7 @@
 package queue;
 
+import exceptions.InvalidInputException;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -25,14 +27,14 @@ public class PlayersQueue {
       String players=input.nextLine();
       String[] playersArray = players.split(" ");
       if(playersArray.length<2){
-        throw new IllegalArgumentException();
+        throw new InvalidInputException("You need at least 2 players to play UNO. Try again.");
       }
       for (String player : playersArray) {
         Player p = new Player(player);
         queue.add(p);
       }
-    }catch(IllegalArgumentException e){
-      System.out.println("You need at least 2 players to play UNO. Try again.");
+    }catch(InvalidInputException e){
+      System.out.println(e.getMessage());
       initializeQueue();
     }
   }

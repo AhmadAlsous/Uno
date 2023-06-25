@@ -4,18 +4,21 @@ import abstractCard.ActionCard;
 import abstractCard.Card;
 import abstractCard.WildCard;
 import card.NumberedCard;
+import exceptions.IllegalMoveException;
+import exceptions.InvalidInputException;
 import piles.DiscardPile;
 import piles.DrawPile;
 import queue.Player;
 import queue.PlayersQueue;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import static UI.Display.printPlayerCards;
-import static UI.Display.printTopDiscardedCard;
+import static utility.Display.printPlayerCards;
+import static utility.Display.printTopDiscardedCard;
 
 public class GameRound {
   private Card chosenCard;
@@ -80,7 +83,7 @@ public class GameRound {
   }
   
   private void endRound(){
-    System.out.println("Congrats " + roundWinner.getName() + "!!! You won this round :)");
+    System.out.println("Congrats " + roundWinner.getName() + "!!! You won this round 🎉");
     calculateScore();
     displayScores();
     Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
@@ -108,17 +111,31 @@ public class GameRound {
   }
   
   private int chooseCard(Player player){
-    while(true) {
-      System.out.println("Choose a card, " + player.getName());
-      Scanner input = new Scanner(System.in);
-      int cardNumber = input.nextInt();
-      cardNumber--;
-      chosenCard = player.getCardList().get(cardNumber);
-      if (canBePlayed(chosenCard)) {
+    Boolean validMove = false;
+    while(!validMove) {
+      try {
+        System.out.println("Choose a card, " + player.getName());
+        Scanner input = new Scanner(System.in);
+        int cardNumber = input.nextInt();
+        if (cardNumber <= 0 || cardNumber > player.getCardList().size()){
+          throw new InvalidInputException("You chose an invalid card number.");
+        }
+        cardNumber--;
+        chosenCard = player.getCardList().get(cardNumber);
+        if(!canBePlayed(chosenCard)) {
+          throw new IllegalMoveException("You can't play this card.");
+        }
+        validMove = true;
         return cardNumber;
+      } catch (InvalidInputException e) {
+        System.out.println(e.getMessage() + " Choose a valid card number:");
+      } catch (InputMismatchException e){
+        System.out.println("You need to enter a number. Enter a valid number:");
+      } catch (IllegalMoveException e){
+        System.out.println(e.getMessage() + " Choose a valid card:");
       }
-      System.out.println("You can't play this card.");
     }
+    return 0;
   }
   
   private Boolean hasPlayableCard(Player player){

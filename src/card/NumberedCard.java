@@ -4,6 +4,7 @@ import abstractCard.ActionCard;
 import abstractCard.Card;
 import abstractCard.Color;
 import abstractCard.WildCard;
+import exceptions.IllegalCardException;
 
 public class NumberedCard implements Card {
   private final int number;
@@ -34,8 +35,10 @@ public class NumberedCard implements Card {
     if(topCard instanceof WildCard card2){
       return getColor() == card2.getChosenColor();
     }
-    NumberedCard card2 = (NumberedCard) topCard;
-    return (getNumber() == card2.getNumber() || getColor() == card2.getColor());
+    if(topCard instanceof NumberedCard card2){
+      return (getNumber() == card2.getNumber() || getColor() == card2.getColor());
+    }
+    throw new IllegalCardException("Invalid card type: " + topCard);
   }
   
   @Override

@@ -3,6 +3,7 @@ package piles;
 import abstractCard.Card;
 import card.CardFactory;
 import abstractCard.Color;
+import exceptions.IllegalCardException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +24,9 @@ public class DrawPile {
   }
   
   public Card drawCard(){
+    if (cardStack.empty()){
+      handleEmptyDrawPile();
+    }
     return cardStack.pop();
   }
   
@@ -30,34 +34,33 @@ public class DrawPile {
     cardStack=new Stack<>();
     HashMap<String,Integer> deck = Deck.getInstance().getDeck();
     for (String key : deck.keySet()) {
-      handleCardType(key, deck);
+      createCardType(key, deck);
     }
     Collections.shuffle(cardStack);
   }
   
-  private void handleCardType(String cardType, HashMap<String,Integer> deck){
+  private void handleEmptyDrawPile(){
+    Stack<Card> discardPile = DiscardPile.getInstance().getCardStack();
+    Card topCard = discardPile.pop();
+    while (!discardPile.empty()){
+      cardStack.push(discardPile.pop());
+    }
+    Collections.shuffle(cardStack);
+    discardPile.push(topCard);
+  }
+  
+  private void createCardType(String cardType, HashMap<String,Integer> deck){
     switch (cardType){
-      case "Numbered":
-        handleNumberedCards(deck.get("Zero"), deck.get("Numbered"));
-        break;
-      case "Skip":
-      case "Reverse":
-      case "DrawTwo":
-        handleActionCards(cardType,deck.get(cardType));
-        break;
-      case "Wild":
-      case "WildDrawFour":
-        handleWildCards(cardType, deck.get(cardType));
-        break;
-      case "Zero":
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid card type: " + cardType);
+      case "Numbered" -> createNumberedCards(deck.get("Zero"), deck.get("Numbered"));
+      case "Skip", "Reverse", "DrawTwo" -> createActionCards(cardType,deck.get(cardType));
+      case "Wild", "WildDrawFour" -> createWildCards(cardType, deck.get(cardType));
+      case "Zero" -> {}
+      default -> throw new IllegalCardException("Invalid card type: " + cardType);
     }
     
   }
   
-  private void handleNumberedCards(int numZeroCards, int numOtherCards){
+  private void createNumberedCards(int numZeroCards, int numOtherCards){
     Color[] colors= Color.values();
     for(int i=0;i<=9;i++){
       int count=i==0?numZeroCards:numOtherCards;
@@ -69,7 +72,7 @@ public class DrawPile {
     }
   }
   
-  private void handleActionCards(String cardType, int numCards){
+  private void createActionCards(String cardType, int numCards){
     Color[] colors= Color.values();
     for(int i=0;i< numCards;i++){
       for(Color color:colors) {
@@ -78,7 +81,7 @@ public class DrawPile {
     }
   }
   
-  private void handleWildCards(String cardType, int numCards){
+  private void createWildCards(String cardType, int numCards){
     int numColors= Color.values().length;
     for(int i=0;i< numCards;i++){
       for(int j=0;j<numColors;j++) {

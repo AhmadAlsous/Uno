@@ -2,6 +2,7 @@ package card;
 
 import abstractCard.Card;
 import abstractCard.Color;
+import exceptions.IllegalCardException;
 
 public class CardFactory {
   public static Card createCard(int number, Color color){
@@ -12,14 +13,14 @@ public class CardFactory {
       case "Skip" -> new SkipCard(color);
       case "Reverse" -> new ReverseCard(color);
       case "DrawTwo" -> new DrawTwoCard(color);
-      default -> throw new IllegalArgumentException("Invalid card type: " + cardType);
+      default -> throw new IllegalCardException("Invalid card type: " + cardType);
     };
   }
   public static Card createCard(String cardType){
     return switch (cardType) {
       case "Wild" -> new WildColorCard();
       case "WildDrawFour" -> new WildDrawFourCard();
-      default -> throw new IllegalArgumentException("Invalid card type: " + cardType);
+      default -> throw new IllegalCardException("Invalid card type: " + cardType);
     };
   }
 }

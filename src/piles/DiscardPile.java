@@ -35,4 +35,8 @@ public class DiscardPile {
   public void addCard(Card card){
     cardStack.push(card);
   }
+  
+  public Stack<Card> getCardStack() {
+    return cardStack;
+  }
 }
