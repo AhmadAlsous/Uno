@@ -1,6 +1,6 @@
 package piles;
 
-public class DeckInfo {
+public class DeckInfo { // stores the count of each card type for each color
   private int zeroCards;
   private int numberedCards;
   private int skipCards;
@@ -10,13 +10,13 @@ public class DeckInfo {
   private int wildDrawFourCards;
   
   public DeckInfo(){
-    setZeroCards(1);
+    setZeroCards(1); // 1 zero card for each color, 4 total
     setNumberedCards(2);
     setReverseCards(2);
     setDrawTwoCards(2);
     setSkipCards(2);
-    setWildCards(1);
-    setWildDrawFourCards(1);
+    setWildCards(1); // 4 cards
+    setWildDrawFourCards(1); // 4 cards
   }
   public int getZero() {
     return zeroCards;

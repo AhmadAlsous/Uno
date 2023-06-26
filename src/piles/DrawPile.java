@@ -39,7 +39,7 @@ public class DrawPile {
     Collections.shuffle(cardStack);
   }
   
-  private void handleEmptyDrawPile(){
+  private void handleEmptyDrawPile(){ // gets all cards from the discard pile except the first and adds them to the draw pile
     Stack<Card> discardPile = DiscardPile.getInstance().getCardStack();
     Card topCard = discardPile.pop();
     while (!discardPile.empty()){
@@ -61,7 +61,6 @@ public class DrawPile {
       case "Zero" -> {}
       default -> throw new IllegalCardException("Invalid card type: " + cardType);
     }
-    
   }
   
   private void createNumberedCards(int numZeroCards, int numOtherCards){

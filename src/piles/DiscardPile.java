@@ -27,7 +27,7 @@ public class DiscardPile {
     cardStack = new Stack<>();
     Card c = DrawPile.getInstance().drawCard();
     cardStack.push(c);
-    if(!(c instanceof NumberedCard)){
+    if(!(c instanceof NumberedCard)){ // first card in discard pile has to be a number
       initializeDiscardPile();
     }
   }

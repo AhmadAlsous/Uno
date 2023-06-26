@@ -1,11 +1,6 @@
 package game;
 
-import abstractCard.ActionCard;
 import abstractCard.Card;
-import abstractCard.WildCard;
-import card.NumberedCard;
-import exceptions.IllegalMoveException;
-import exceptions.InvalidInputException;
 import piles.DiscardPile;
 import piles.DrawPile;
 import queue.Player;
@@ -18,12 +13,12 @@ import static utility.Display.printPlayerCards;
 import static utility.Display.printTopDiscardedCard;
 import static utility.Utility.timeBetweenTurns;
 
-public class GameRound {
-  private final DrawPile drawPile;
-  private final DiscardPile discardPile;
-  private final Queue<Player> playerQueue;
-  private final Options options;
-  private Player roundWinner;
+public abstract class GameRound {
+  protected final DrawPile drawPile;
+  protected final DiscardPile discardPile;
+  protected final Queue<Player> playerQueue;
+  protected final Options options;
+  protected Player roundWinner;
   
   public GameRound(Queue<Player> queue, Options o){
     playerQueue = queue;
@@ -31,36 +26,42 @@ public class GameRound {
     drawPile = DrawPile.getInstance();
     discardPile = DiscardPile.getInstance();
   }
+  
   public void playRound(){
     initializeRound();
     while (!isRoundOver()) {
       Player currentPlayer = playerQueue.peek();
       printPlayerCards(currentPlayer);
-      playTurn(currentPlayer);
+      Card topDiscardedCard = discardPile.getTopCard();
+      printTopDiscardedCard(topDiscardedCard);
+      if(!hasPlayableCard(currentPlayer)){
+        System.out.println("You don't have a card to play, " + currentPlayer.getName() + "! Drawing a card.");
+        Card drawnCard = currentPlayer.drawCard();
+        System.out.println("You drew a " + drawnCard.toString());
+        if (canBePlayed(drawnCard)){ // play the drawn card if valid
+          System.out.println("You can play this card.");
+          playCard(currentPlayer, currentPlayer.getCardList().size()-1);
+        } else if (options.getDrawOnlyOneCardIfCantPlay()){ // if only one card move to the next player
+          PlayersQueue.getInstance().nextPlayer();
+        }
+      } else {
+        int cardNumber = chooseCard(currentPlayer);
+        playCard(currentPlayer, cardNumber);
+      }
       System.out.println("-------------------------------------------------");
       try {
-        TimeUnit.MILLISECONDS.sleep(timeBetweenTurns);
+        TimeUnit.MILLISECONDS.sleep(timeBetweenTurns); // pause for some time after each turn
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+    displayRoundWinner();
+    calculateScore();
+    displayScores();
     endRound();
   }
   
-  public void initializeRound(){
-    int numOfPlayers = playerQueue.size();
-    int numOfCardsPerPlayer = options.getNumOfCardsPerPlayer();
-    if (numOfPlayers * numOfCardsPerPlayer > drawPile.getDrawPileSize() - 10){
-      throw new IllegalArgumentException("There has to be at least 10 cards in the draw pile to start.");
-    }
-    for(int i=0;i<numOfPlayers;i++){
-      Player player= playerQueue.remove();
-      player.drawCard(numOfCardsPerPlayer);
-      playerQueue.add(player);
-    }
-  }
-  
-  private Boolean isRoundOver(){
+  private boolean isRoundOver(){
     for (Player player : playerQueue){
       if(player.getCardList().size() == 0){
         roundWinner = player;
@@ -70,34 +71,19 @@ public class GameRound {
     return false;
   }
   
-  private void playTurn(Player player){
-    Card topDiscardedCard = discardPile.getTopCard();
-    printTopDiscardedCard(topDiscardedCard);
-    if(!hasPlayableCard(player)){
-      System.out.println("You don't have a card to play, " + player.getName() + "! Drawing a card.");
-      Card drawnCard = player.drawCard();
-      System.out.println("You drew a " + drawnCard.toString());
-      if (canBePlayed(drawnCard)){
-        System.out.println("You can play this card.");
-        playCard(player, player.getCardList().size()-1);
-      } else if (options.getDrawOnlyOneCardIfCantPlay()){
-        PlayersQueue.getInstance().nextPlayer();
+  private Boolean hasPlayableCard(Player player){
+    List<Card> cardList = player.getCardList();
+    for(Card card : cardList){
+      if (canBePlayed(card)){
+        return true;
       }
-    } else {
-      int cardNumber = chooseCard(player);
-      playCard(player, cardNumber);
     }
+    return false;
   }
   
-  private void endRound(){
-    System.out.println("Congrats " + roundWinner.getName() + "!!! You won this round 🎉");
-    calculateScore();
-    displayScores();
-    for(Player player : playerQueue){
-      player.clearCardList();
-    }
-    drawPile.initializeDrawPile();
-    discardPile.initializeDiscardPile();
+  protected boolean canBePlayed(Card playerCard){
+    Card topCard = discardPile.getTopCard();
+    return playerCard.isValidCard(topCard);
   }
   
   private void calculateScore(){
@@ -108,99 +94,11 @@ public class GameRound {
     }
   }
   
-  private void displayScores(){
-    for (Player player : playerQueue) {
-      System.out.println(player.getName() + "'s score: " + player.getScore());
-    }
-  }
-  
-  private int chooseCard(Player player){
-    int cardNumber = 0;
-    boolean validMove = false;
-    while(!validMove) {
-      try {
-        cardNumber = handleCardNumberInput(player);
-        validateCardNumber(player, cardNumber);
-        cardNumber--;
-        validatePlayableCard(player, cardNumber);
-        validMove = true;
-      } catch (InvalidInputException e) {
-        System.out.println(e.getMessage() + " Choose a valid card number:");
-      } catch (InputMismatchException e){
-        System.out.println("You need to enter a number. Enter a valid number:");
-      } catch (IllegalMoveException e){
-        System.out.println(e.getMessage() + " Choose a valid card:");
-      }
-    }
-    return cardNumber;
-  }
-  
-  private int handleCardNumberInput(Player player){
-    System.out.println("Choose a card, " + player.getName());
-    if (options.hasToSayUno()) {
-      String sayUno = sayUno(player);
-      if (player.getCardList().size() == 2 && sayUno.equalsIgnoreCase("Uno")) {
-        System.out.println("Good job! You remembered to say Uno. Choose a card:");
-        return chooseCardNumber();
-      }
-      return Integer.parseInt(sayUno);
-      }
-    return chooseCardNumber();
-  }
-  
-  private String sayUno(Player player){
-    Scanner input = new Scanner(System.in);
-    String uno = input.next();
-    if (player.getCardList().size() == 2 && !uno.equalsIgnoreCase("Uno")){
-      System.out.println("You forgot to say Uno! You have to draw two cards.");
-      player.drawCard(2);
-    }
-    return uno;
-  }
-  
-  private int chooseCardNumber() {
-    Scanner scanner = new Scanner(System.in);
-    return scanner.nextInt();
-  }
-  
-  private void validateCardNumber(Player player, int cardNumber) throws InvalidInputException {
-    if (cardNumber <= 0 || cardNumber > player.getCardList().size()) {
-      throw new InvalidInputException("You chose an invalid card number.");
-    }
-  }
-  
-  private void validatePlayableCard(Player player, int cardNumber) throws IllegalMoveException {
-    Card chosenCard = player.getCardList().get(cardNumber);
-    if (!canBePlayed(chosenCard)) {
-      throw new IllegalMoveException("You can't play this card.");
-    }
-  }
-  
-  private Boolean hasPlayableCard(Player player){
-    List<Card> cardList = player.getCardList();
-    for(Card card : cardList){
-      if (canBePlayed(card)){
-        return true;
-      }
-    }
-  return false;
-  }
-  
-  private Boolean canBePlayed(Card playerCard){
-    Card topCard = discardPile.getTopCard();
-    return playerCard.isValidCard(topCard);
-  }
-  
-  private void playCard(Player player, int cardNumber){
-    Card card = player.getCardList().get(cardNumber);
-    player.playCard(cardNumber);
-    if (card instanceof NumberedCard) {
-        PlayersQueue.getInstance().nextPlayer();
-    } else if (card instanceof ActionCard actionCard){
-      actionCard.performAction();
-    } else if (card instanceof WildCard wildCard) {
-      wildCard.performAction();
-    }
-  }
+  protected abstract void initializeRound();
+  protected abstract void playCard(Player player, int cardNumber);
+  protected abstract int chooseCard(Player player);
+  protected abstract void displayRoundWinner();
+  protected abstract void displayScores();
+  protected abstract void endRound();
   
 }

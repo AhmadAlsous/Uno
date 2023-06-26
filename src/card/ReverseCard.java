@@ -21,7 +21,7 @@ public class ReverseCard extends ActionCard {
   @Override
   public void performAction(){
     Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    if(playerQueue.size()!=2) {
+    if(playerQueue.size()!=2) { // the queue shouldn't be reversed if there's only two players, it acts as a skip instead
       reverseQueue(playerQueue);
     }
   }

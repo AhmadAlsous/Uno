@@ -11,7 +11,7 @@ public class Options {
   
   public static class Builder {
     private DeckInfo deckOptions = new DeckInfo();
-    private int numOfCardsPerPlayer = 7;
+    private int numOfCardsPerPlayer = 3;
     private boolean sayUno = true;
     private int scoreToWin = 500;
     private boolean drawOnlyOneCard = true;

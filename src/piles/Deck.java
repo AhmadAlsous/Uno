@@ -25,7 +25,7 @@ public class Deck {
     initializeDeck(options.getDeckOptions());
   }
   
-  private void initializeDeck(DeckInfo deckOptions){
+  private void initializeDeck(DeckInfo deckOptions){ // calls all getters in DeckInfo and puts the card name and its count in the hashmap
     deck.clear();
     Class<?> deckOptionsClass=deckOptions.getClass();
     Method[] methods=deckOptionsClass.getDeclaredMethods();

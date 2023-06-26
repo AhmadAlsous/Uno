@@ -1,41 +1,33 @@
-package game;
+package defaultGame;
 
 import exceptions.InvalidInputException;
+import game.Game;
+import game.Options;
 import queue.Player;
 import queue.PlayersQueue;
 
 import java.util.Scanner;
 
-public class DefaultGame extends Game{
+public class DefaultGame extends Game {
   public DefaultGame(){
-    Options defaultOptions=new Options.Builder().build();
-    setOptions(defaultOptions);
-    setPlayersQueue(PlayersQueue.getInstance().getQueue());
-  }
-  @Override
-  public void play() {
-    while (!isGameOver()) {
-      setGameRound(new GameRound(getPlayersQueue(), getOptions()));
-      getGameRound().playRound();
-      if(isGameOver() || playMore().equals("n")){
-        break;
-      }
-    }
-    displayWinner();
+    options = new Options.Builder().build(); // default options
+    playersQueue = PlayersQueue.getInstance().getQueue();
   }
   
-  private Boolean isGameOver(){
+  @Override
+  protected boolean isGameOver(){
     int maxScore = 0;
-    for (Player player : getPlayersQueue()){
+    for (Player player : playersQueue){
       if(player.getScore() >= maxScore){
         maxScore = player.getScore();
-        setGameWinner(player);
+        gameWinner = player;
       }
     }
-    return getGameWinner().getScore() >= getOptions().getScoreToWin();
+    return gameWinner.getScore() >= options.getScoreToWin();
   }
   
-  private String playMore(){
+  @Override
+  protected String playMore(){
     String playMore = "";
     boolean validInput = false;
     while (!validInput){
@@ -54,9 +46,10 @@ public class DefaultGame extends Game{
     return playMore.toLowerCase();
   }
   
-  private void displayWinner(){
+  @Override
+  protected void displayWinner(){
     System.out.println();
     System.out.println("🎉🎉🎉🎉🎉");
-    System.out.println(getGameWinner().getName().toUpperCase() + " HAS WON WITH A SCORE OF " + getGameWinner().getScore() + "!!!!!");
+    System.out.println(gameWinner.getName().toUpperCase() + " HAS WON WITH A SCORE OF " + gameWinner.getScore() + "!!!!!");
   }
 }

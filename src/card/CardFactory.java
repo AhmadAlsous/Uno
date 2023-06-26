@@ -4,7 +4,7 @@ import abstractCard.Card;
 import abstractCard.Color;
 import exceptions.IllegalCardException;
 
-public class CardFactory {
+public class CardFactory { // the factory will decide which card type to create based on the provided arguments
   public static Card createCard(int number, Color color){
     return new NumberedCard(number,color);
   }
