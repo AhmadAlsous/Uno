@@ -26,8 +26,11 @@ public class PlayersQueue {
       Scanner input=new Scanner(System.in);
       String players=input.nextLine();
       String[] playersArray = players.split(" ");
-      if(playersArray.length<2){
+      if(playersArray.length < 2){
         throw new InvalidInputException("You need at least 2 players to play UNO. Try again.");
+      }
+      if(playersArray.length > 10){
+        throw new InvalidInputException("Maximum number of players is 10. Try again.");
       }
       for (String player : playersArray) {
         Player p = new Player(player);

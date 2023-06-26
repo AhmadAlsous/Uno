@@ -2,6 +2,6 @@ package abstractCard;
 
 public interface Card {
   String getCardName();
-  Boolean isValidCard(Card card);
+  boolean isValidCard(Card card);
   int getCardScore();
 }

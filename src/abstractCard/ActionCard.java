@@ -15,7 +15,7 @@ public abstract class ActionCard implements Card{
   }
   
   @Override
-  public Boolean isValidCard(Card topCard) {
+  public boolean isValidCard(Card topCard) {
     if(topCard instanceof NumberedCard card2){
       return (getColor() == card2.getColor());
     }

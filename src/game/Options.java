@@ -6,12 +6,16 @@ public class Options {
   private DeckInfo deckOptions;
   private int numOfCardsPerPlayer;
   private boolean sayUno;
+  private int scoreToWin;
+  private boolean drawOnlyOneCardIfCantPlay;
   
   public Options(){
     DeckInfo defaultDeckOptions = new DeckInfo();
     setDeckOptions(defaultDeckOptions);
     setNumOfCardsPerPlayer(4);
-    setSayUno(false);
+    setSayUno(true);
+    setScoreToWin(500);
+    setDrawOnlyOneCardIfCantPlay(true);
   }
   
   public DeckInfo getDeckOptions() {
@@ -30,11 +34,27 @@ public class Options {
     this.numOfCardsPerPlayer = numOfCardsPerPlayer;
   }
   
-  public boolean sayUno() {
+  public boolean hasToSayUno() {
     return sayUno;
   }
   
   public void setSayUno(boolean sayUno) {
     this.sayUno = sayUno;
+  }
+  
+  public int getScoreToWin() {
+    return scoreToWin;
+  }
+  
+  public void setScoreToWin(int scoreToWin) {
+    this.scoreToWin = scoreToWin;
+  }
+  
+  public boolean getDrawOnlyOneCardIfCantPlay() {
+    return drawOnlyOneCardIfCantPlay;
+  }
+  
+  public void setDrawOnlyOneCardIfCantPlay(boolean drawOnlyOneCardIfCantPlay) {
+    this.drawOnlyOneCardIfCantPlay = drawOnlyOneCardIfCantPlay;
   }
 }

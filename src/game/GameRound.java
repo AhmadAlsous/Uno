@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import static utility.Display.printPlayerCards;
 import static utility.Display.printTopDiscardedCard;
+import static utility.Utility.timeBetweenTurns;
 
 public class GameRound {
   private final DrawPile drawPile;
@@ -38,7 +39,7 @@ public class GameRound {
       playTurn(currentPlayer);
       System.out.println("-------------------------------------------------");
       try {
-        TimeUnit.MILLISECONDS.sleep(650);
+        TimeUnit.MILLISECONDS.sleep(timeBetweenTurns);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -49,6 +50,9 @@ public class GameRound {
   public void initializeRound(){
     int numOfPlayers = playerQueue.size();
     int numOfCardsPerPlayer = options.getNumOfCardsPerPlayer();
+    if (numOfPlayers * numOfCardsPerPlayer > drawPile.getDrawPileSize() - 10){
+      throw new IllegalArgumentException("There has to be at least 10 cards in the draw pile to start.");
+    }
     for(int i=0;i<numOfPlayers;i++){
       Player player= playerQueue.remove();
       player.drawCard(numOfCardsPerPlayer);
@@ -76,7 +80,7 @@ public class GameRound {
       if (canBePlayed(drawnCard)){
         System.out.println("You can play this card.");
         playCard(player, player.getCardList().size()-1);
-      } else {
+      } else if (options.getDrawOnlyOneCardIfCantPlay()){
         PlayersQueue.getInstance().nextPlayer();
       }
     } else {
@@ -133,7 +137,7 @@ public class GameRound {
   
   private int handleCardNumberInput(Player player){
     System.out.println("Choose a card, " + player.getName());
-    if (options.sayUno()) {
+    if (options.hasToSayUno()) {
       String sayUno = sayUno(player);
       if (player.getCardList().size() == 2 && sayUno.equalsIgnoreCase("Uno")) {
         System.out.println("Good job! You remembered to say Uno. Choose a card:");

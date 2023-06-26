@@ -32,7 +32,7 @@ public class DefaultGame extends Game{
         setGameWinner(player);
       }
     }
-    return getGameWinner().getScore() >= 500;
+    return getGameWinner().getScore() >= getOptions().getScoreToWin();
   }
   
   private String playMore(){

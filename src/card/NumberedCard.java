@@ -28,7 +28,7 @@ public class NumberedCard implements Card {
   }
   
   @Override
-  public Boolean isValidCard(Card topCard) {
+  public boolean isValidCard(Card topCard) {
     if(topCard instanceof ActionCard card2){
       return getColor() == card2.getColor();
     }

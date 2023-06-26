@@ -12,7 +12,7 @@ public abstract class WildCard implements Card{
   public abstract String getCardName();
   
   @Override
-  public Boolean isValidCard(Card topCard) {
+  public boolean isValidCard(Card topCard) {
     return true;
   }
   

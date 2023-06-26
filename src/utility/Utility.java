@@ -20,6 +20,7 @@ public class Utility {
   public static final String WHITE = "\u001B[47m";
   public static final int cardWidth = 11;
   public static final int spaceBetweenCards = 2;
+  public static final int timeBetweenTurns = 650;
   
   private Utility(){
     throw new AssertionError("This class should not be instantiated.");

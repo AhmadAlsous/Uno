@@ -49,6 +49,10 @@ public class DrawPile {
     discardPile.push(topCard);
   }
   
+  public int getDrawPileSize(){
+    return cardStack.size();
+  }
+  
   private void createCardType(String cardType, HashMap<String,Integer> deck){
     switch (cardType){
       case "Numbered" -> createNumberedCards(deck.get("Zero"), deck.get("Numbered"));
