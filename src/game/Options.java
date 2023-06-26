@@ -1,5 +1,6 @@
 package game;
 
+import piles.Deck;
 import piles.DeckInfo;
 
 public class Options {
@@ -11,12 +12,13 @@ public class Options {
   
   public static class Builder {
     private DeckInfo deckOptions = new DeckInfo();
-    private int numOfCardsPerPlayer = 3;
+    private int numOfCardsPerPlayer = 7;
     private boolean sayUno = true;
     private int scoreToWin = 500;
     private boolean drawOnlyOneCard = true;
     public Builder deckOptions(DeckInfo deckOptions){
       this.deckOptions = deckOptions;
+      Deck.getInstance().setDeckOptions(deckOptions);
       return this;
     }
     public Builder numOfCardsPerPlayer(int numOfCardsPerPlayer){

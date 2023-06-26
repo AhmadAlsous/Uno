@@ -21,8 +21,8 @@ public class Deck {
     return deckInstance;
   }
   
-  public void setDeckOptions(Options options) {
-    initializeDeck(options.getDeckOptions());
+  public void setDeckOptions(DeckInfo deckOptions) {
+    initializeDeck(deckOptions);
   }
   
   private void initializeDeck(DeckInfo deckOptions){ // calls all getters in DeckInfo and puts the card name and its count in the hashmap

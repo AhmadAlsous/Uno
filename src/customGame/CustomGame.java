@@ -1,22 +1,27 @@
-package defaultGame;
+package customGame;
 
+import defaultGame.DefaultRound;
 import exceptions.InvalidInputException;
 import game.Game;
 import game.Options;
+import piles.DeckInfo;
 import queue.Player;
 import queue.PlayersQueue;
 
 import java.util.Scanner;
 
-public class DefaultGame extends Game {
-  public DefaultGame(){
-    options = new Options.Builder().build(); // default options
+public class CustomGame extends Game {
+  public CustomGame(){
+    DeckInfo deckOptions = new DeckInfo();
+    deckOptions.setWildDrawFourCards(2);
+    deckOptions.setWildCards(2);
+    options = new Options.Builder().deckOptions(deckOptions).drawOnlyOneCard(false).sayUno(false).numOfCardsPerPlayer(5).scoreToWin(100).build(); // customized options
     playersQueue = PlayersQueue.getInstance().getQueue();
   }
   
   public void play(){
     while (!isGameOver()) {
-      gameRound = new DefaultRound(playersQueue, options);
+      gameRound = new CustomRound(playersQueue, options);
       gameRound.playRound();
       if(isGameOver() || playMore().equals("n")){
         break;
@@ -43,11 +48,11 @@ public class DefaultGame extends Game {
     boolean validInput = false;
     while (!validInput){
       try {
-        System.out.println("Play another round? (y/n)");
+        System.out.println("Play another round? (yes / no)");
         Scanner input = new Scanner(System.in);
         playMore = input.next();
-        if (!(playMore.equalsIgnoreCase("y") || playMore.equalsIgnoreCase("n"))){
-          throw new InvalidInputException("You must enter y or n.");
+        if (!(playMore.equalsIgnoreCase("yes") || playMore.equalsIgnoreCase("no"))){
+          throw new InvalidInputException("You must enter yes or no.");
         }
         validInput = true;
       } catch (InvalidInputException e) {
@@ -59,8 +64,8 @@ public class DefaultGame extends Game {
   
   @Override
   protected void displayWinner(){
-    System.out.println();
-    System.out.println("🎉🎉🎉🎉🎉");
-    System.out.println(gameWinner.getName().toUpperCase() + " HAS WON WITH A SCORE OF " + gameWinner.getScore() + "!!!!!");
+    System.out.println("🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉");
+    System.out.println(gameWinner.getName() + " won with a score of " + gameWinner.getScore() + "!!!!!");
+    System.out.println("🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉");
   }
 }

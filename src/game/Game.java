@@ -11,17 +11,7 @@ public abstract class Game {
   protected Player gameWinner;
   protected GameRound gameRound;
   
-  public void play(){
-    while (!isGameOver()) {
-      gameRound = new DefaultRound(playersQueue, options);
-      gameRound.playRound();
-      if(isGameOver() || playMore().equals("n")){
-        break;
-      }
-    }
-    displayWinner();
-  }
-  
+  public abstract void play();
   protected abstract boolean isGameOver();
   protected abstract String playMore();
   protected abstract void displayWinner();
