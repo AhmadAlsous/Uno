@@ -1,8 +1,7 @@
 package card;
 
 import abstractCard.WildCard;
-
-import static game.GameRound.nextPlayer;
+import queue.PlayersQueue;
 
 public class WildColorCard extends WildCard {
   @Override
@@ -13,6 +12,6 @@ public class WildColorCard extends WildCard {
   @Override
   public void performAction() {
     chooseColor();
-    nextPlayer();
+    PlayersQueue.getInstance().nextPlayer();
   }
 }

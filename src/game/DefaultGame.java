@@ -36,22 +36,22 @@ public class DefaultGame extends Game{
   }
   
   private String playMore(){
-    Boolean validInput = false;
+    String playMore = "";
+    boolean validInput = false;
     while (!validInput){
       try {
         System.out.println("Play another round? (y/n)");
         Scanner input = new Scanner(System.in);
-        String playMore = input.next();
+        playMore = input.next();
         if (!(playMore.equalsIgnoreCase("y") || playMore.equalsIgnoreCase("n"))){
           throw new InvalidInputException("You must enter y or n.");
         }
         validInput = true;
-        return playMore.toLowerCase();
       } catch (InvalidInputException e) {
         System.out.println(e.getMessage());
       }
     }
-    return "";
+    return playMore.toLowerCase();
   }
   
   private void displayWinner(){

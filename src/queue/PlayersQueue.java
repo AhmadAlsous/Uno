@@ -42,4 +42,9 @@ public class PlayersQueue {
   public Queue<Player> getQueue(){
     return queue;
   }
+  
+  public void nextPlayer(){
+    Player currentPlayer = queue.remove();
+    queue.add(currentPlayer);
+  }
 }

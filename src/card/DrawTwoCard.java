@@ -2,12 +2,8 @@ package card;
 
 import abstractCard.ActionCard;
 import abstractCard.Color;
-import queue.Player;
 import queue.PlayersQueue;
 
-import java.util.Queue;
-
-import static game.GameRound.nextPlayer;
 
 public class DrawTwoCard extends ActionCard {
   public DrawTwoCard(Color color) {
@@ -21,10 +17,10 @@ public class DrawTwoCard extends ActionCard {
   
   @Override
   public void performAction(){
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer();
-    playerQueue.peek().drawCard(2);
-    System.out.println(playerQueue.peek().getName()+" has drawn two cards!");
-    nextPlayer();
+    PlayersQueue playerQueue = PlayersQueue.getInstance();
+    playerQueue.nextPlayer();
+    playerQueue.getQueue().peek().drawCard(2);
+    System.out.println(playerQueue.getQueue().peek().getName()+" has drawn two cards!");
+    playerQueue.nextPlayer();
   }
 }

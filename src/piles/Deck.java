@@ -7,8 +7,7 @@ import java.util.HashMap;
 
 public class Deck {
   private static Deck deckInstance;
-  private HashMap<String,Integer> deck;
-  private DeckInfo deckInfo;
+  private final HashMap<String,Integer> deck;
   
   private Deck(){
     deck=new HashMap<>();
@@ -23,7 +22,6 @@ public class Deck {
   }
   
   public void setDeckOptions(DeckInfo deckOptions) {
-    deckInfo = deckOptions;
     initializeDeck(deckOptions);
   }
   

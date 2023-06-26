@@ -18,11 +18,10 @@ import static utility.Display.printPlayerCards;
 import static utility.Display.printTopDiscardedCard;
 
 public class GameRound {
-  private DrawPile drawPile;
-  private DiscardPile discardPile;
-  private Queue<Player> playerQueue;
-  private Options options;
-  private Card chosenCard;
+  private final DrawPile drawPile;
+  private final DiscardPile discardPile;
+  private final Queue<Player> playerQueue;
+  private final Options options;
   private Player roundWinner;
   
   public GameRound(Queue<Player> queue, Options o){
@@ -78,7 +77,7 @@ public class GameRound {
         System.out.println("You can play this card.");
         playCard(player, player.getCardList().size()-1);
       } else {
-        nextPlayer();
+        PlayersQueue.getInstance().nextPlayer();
       }
     } else {
       int cardNumber = chooseCard(player);
@@ -112,30 +111,15 @@ public class GameRound {
   }
   
   private int chooseCard(Player player){
-    Boolean validMove = false;
+    int cardNumber = 0;
+    boolean validMove = false;
     while(!validMove) {
       try {
-        int cardNumber;
-        System.out.println("Choose a card, " + player.getName());
-        String sayUno = sayUno(player);
-        if(player.getCardList().size() == 2 && sayUno.equalsIgnoreCase("Uno")) {
-          System.out.println("Good job! You remembered to say Uno.");
-          Scanner input = new Scanner(System.in);
-          cardNumber = input.nextInt();
-        }
-        else {
-          cardNumber = Integer.parseInt(sayUno);
-        }
-        if (cardNumber <= 0 || cardNumber > player.getCardList().size()){
-          throw new InvalidInputException("You chose an invalid card number.");
-        }
+        cardNumber = handleCardNumberInput(player);
+        validateCardNumber(player, cardNumber);
         cardNumber--;
-        chosenCard = player.getCardList().get(cardNumber);
-        if(!canBePlayed(chosenCard)) {
-          throw new IllegalMoveException("You can't play this card.");
-        }
+        validatePlayableCard(player, cardNumber);
         validMove = true;
-        return cardNumber;
       } catch (InvalidInputException e) {
         System.out.println(e.getMessage() + " Choose a valid card number:");
       } catch (InputMismatchException e){
@@ -144,7 +128,20 @@ public class GameRound {
         System.out.println(e.getMessage() + " Choose a valid card:");
       }
     }
-    return 0;
+    return cardNumber;
+  }
+  
+  private int handleCardNumberInput(Player player){
+    System.out.println("Choose a card, " + player.getName());
+    if (options.sayUno()) {
+      String sayUno = sayUno(player);
+      if (player.getCardList().size() == 2 && sayUno.equalsIgnoreCase("Uno")) {
+        System.out.println("Good job! You remembered to say Uno. Choose a card:");
+        return chooseCardNumber();
+      }
+      return Integer.parseInt(sayUno);
+      }
+    return chooseCardNumber();
   }
   
   private String sayUno(Player player){
@@ -155,6 +152,24 @@ public class GameRound {
       player.drawCard(2);
     }
     return uno;
+  }
+  
+  private int chooseCardNumber() {
+    Scanner scanner = new Scanner(System.in);
+    return scanner.nextInt();
+  }
+  
+  private void validateCardNumber(Player player, int cardNumber) throws InvalidInputException {
+    if (cardNumber <= 0 || cardNumber > player.getCardList().size()) {
+      throw new InvalidInputException("You chose an invalid card number.");
+    }
+  }
+  
+  private void validatePlayableCard(Player player, int cardNumber) throws IllegalMoveException {
+    Card chosenCard = player.getCardList().get(cardNumber);
+    if (!canBePlayed(chosenCard)) {
+      throw new IllegalMoveException("You can't play this card.");
+    }
   }
   
   private Boolean hasPlayableCard(Player player){
@@ -176,18 +191,12 @@ public class GameRound {
     Card card = player.getCardList().get(cardNumber);
     player.playCard(cardNumber);
     if (card instanceof NumberedCard) {
-        nextPlayer();
+        PlayersQueue.getInstance().nextPlayer();
     } else if (card instanceof ActionCard actionCard){
       actionCard.performAction();
     } else if (card instanceof WildCard wildCard) {
       wildCard.performAction();
     }
-  }
-  
-  public static void nextPlayer(){
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    Player currentPlayer = playerQueue.remove();
-    playerQueue.add(currentPlayer);
   }
   
 }

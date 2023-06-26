@@ -5,11 +5,13 @@ import piles.DeckInfo;
 public class Options {
   private DeckInfo deckOptions;
   private int numOfCardsPerPlayer;
+  private boolean sayUno;
   
   public Options(){
     DeckInfo defaultDeckOptions = new DeckInfo();
     setDeckOptions(defaultDeckOptions);
     setNumOfCardsPerPlayer(4);
+    setSayUno(false);
   }
   
   public DeckInfo getDeckOptions() {
@@ -26,5 +28,13 @@ public class Options {
   
   public void setNumOfCardsPerPlayer(int numOfCardsPerPlayer) {
     this.numOfCardsPerPlayer = numOfCardsPerPlayer;
+  }
+  
+  public boolean sayUno() {
+    return sayUno;
+  }
+  
+  public void setSayUno(boolean sayUno) {
+    this.sayUno = sayUno;
   }
 }

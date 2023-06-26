@@ -2,12 +2,7 @@ package card;
 
 import abstractCard.ActionCard;
 import abstractCard.Color;
-import queue.Player;
 import queue.PlayersQueue;
-
-import java.util.Queue;
-
-import static game.GameRound.nextPlayer;
 
 public class SkipCard extends ActionCard {
   public SkipCard(Color color) {
@@ -20,10 +15,10 @@ public class SkipCard extends ActionCard {
   
   @Override
   public void performAction() {
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer();
-    System.out.println(playerQueue.peek().getName()+" has been skipped!");
-    nextPlayer();
+    PlayersQueue playerQueue = PlayersQueue.getInstance();
+    playerQueue.nextPlayer();
+    System.out.println(playerQueue.getQueue().peek().getName()+" has been skipped!");
+    playerQueue.nextPlayer();
   }
   
 }

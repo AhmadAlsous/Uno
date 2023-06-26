@@ -24,7 +24,7 @@ public abstract class WildCard implements Card{
   public void chooseColor(){
     System.out.println("Choose a color: ");
     printColorCards();
-    Boolean validInput = false;
+    boolean validInput = false;
     while(!validInput) {
       try {
         Scanner input = new Scanner(System.in);

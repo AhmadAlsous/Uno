@@ -1,12 +1,7 @@
 package card;
 
 import abstractCard.WildCard;
-import queue.Player;
 import queue.PlayersQueue;
-
-import java.util.Queue;
-
-import static game.GameRound.nextPlayer;
 
 public class WildDrawFourCard extends WildCard {
   @Override
@@ -17,10 +12,10 @@ public class WildDrawFourCard extends WildCard {
   @Override
   public void performAction() {
     chooseColor();
-    Queue<Player> playerQueue = PlayersQueue.getInstance().getQueue();
-    nextPlayer();
-    playerQueue.peek().drawCard(4);
-    System.out.println(playerQueue.peek().getName()+" has drawn four cards!");
-    nextPlayer();
+    PlayersQueue playerQueue = PlayersQueue.getInstance();
+    playerQueue.nextPlayer();
+    playerQueue.getQueue().peek().drawCard(4);
+    System.out.println(playerQueue.getQueue().peek().getName()+" has drawn four cards!");
+    playerQueue.nextPlayer();
   }
 }

@@ -7,18 +7,13 @@ import java.util.Stack;
 
 public class Utility {
   public static String getColor(Color c){
-    switch (c){
-      case RED:
-        return "\u001B[41m";
-      case BLUE:
-        return "\u001B[44m";
-      case GREEN:
-        return "\u001B[42m";
-      case YELLOW:
-        return "\u001B[43m";
-        default:
-          throw new IllegalArgumentException("Illegal card color: " + c);
-      }
+    return switch (c) {
+      case RED -> "\u001B[41m";
+      case BLUE -> "\u001B[44m";
+      case GREEN -> "\u001B[42m";
+      case YELLOW -> "\u001B[43m";
+      default -> throw new IllegalArgumentException("Illegal card color: " + c);
+    };
     }
   public static final String STOP = "\u001B[0m";
   public static final String BLACK_FONT = "\u001B[30m";
