@@ -11,8 +11,8 @@ public class Deck {
   
   private Deck(){
     deck=new HashMap<>();
-    DeckInfo defaultDeckOptions=new Options().getDeckOptions();
-    setDeckOptions(defaultDeckOptions);
+    DeckInfo defaultDeckOptions=new DeckInfo();
+    initializeDeck(defaultDeckOptions);
   }
   
   public static Deck getInstance() {
@@ -21,8 +21,8 @@ public class Deck {
     return deckInstance;
   }
   
-  public void setDeckOptions(DeckInfo deckOptions) {
-    initializeDeck(deckOptions);
+  public void setDeckOptions(Options options) {
+    initializeDeck(options.getDeckOptions());
   }
   
   private void initializeDeck(DeckInfo deckOptions){

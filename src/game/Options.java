@@ -3,58 +3,68 @@ package game;
 import piles.DeckInfo;
 
 public class Options {
-  private DeckInfo deckOptions;
-  private int numOfCardsPerPlayer;
-  private boolean sayUno;
-  private int scoreToWin;
-  private boolean drawOnlyOneCardIfCantPlay;
+  private final DeckInfo deckOptions;
+  private final int numOfCardsPerPlayer;
+  private final boolean sayUno;
+  private final int scoreToWin;
+  private final boolean drawOnlyOneCardIfCantPlay;
   
-  public Options(){
-    DeckInfo defaultDeckOptions = new DeckInfo();
-    setDeckOptions(defaultDeckOptions);
-    setNumOfCardsPerPlayer(4);
-    setSayUno(true);
-    setScoreToWin(500);
-    setDrawOnlyOneCardIfCantPlay(true);
+  public static class Builder {
+    private DeckInfo deckOptions = new DeckInfo();
+    private int numOfCardsPerPlayer = 7;
+    private boolean sayUno = true;
+    private int scoreToWin = 500;
+    private boolean drawOnlyOneCard = true;
+    public Builder deckOptions(DeckInfo deckOptions){
+      this.deckOptions = deckOptions;
+      return this;
+    }
+    public Builder numOfCardsPerPlayer(int numOfCardsPerPlayer){
+      this.numOfCardsPerPlayer = numOfCardsPerPlayer;
+      return this;
+    }
+    public Builder sayUno(boolean sayUno){
+      this.sayUno = sayUno;
+      return this;
+    }
+    public Builder scoreToWin(int scoreToWin){
+      this.scoreToWin = scoreToWin;
+      return this;
+    }
+    public Builder drawOnlyOneCard(boolean drawOnlyOneCard){
+      this.drawOnlyOneCard = drawOnlyOneCard;
+      return this;
+    }
+    public Options build(){
+      return new Options(this);
+    }
+  }
+  
+  public Options(Builder builder){
+    deckOptions = builder.deckOptions;
+    numOfCardsPerPlayer = builder.numOfCardsPerPlayer;
+    sayUno = builder.sayUno;
+    scoreToWin = builder.scoreToWin;
+    drawOnlyOneCardIfCantPlay = builder.drawOnlyOneCard;
   }
   
   public DeckInfo getDeckOptions() {
     return deckOptions;
   }
   
-  public void setDeckOptions(DeckInfo deckOptions) {
-    this.deckOptions = deckOptions;
-  }
-  
   public int getNumOfCardsPerPlayer() {
     return numOfCardsPerPlayer;
   }
-  
-  public void setNumOfCardsPerPlayer(int numOfCardsPerPlayer) {
-    this.numOfCardsPerPlayer = numOfCardsPerPlayer;
-  }
-  
+
   public boolean hasToSayUno() {
     return sayUno;
   }
-  
-  public void setSayUno(boolean sayUno) {
-    this.sayUno = sayUno;
-  }
-  
+
   public int getScoreToWin() {
     return scoreToWin;
   }
-  
-  public void setScoreToWin(int scoreToWin) {
-    this.scoreToWin = scoreToWin;
-  }
-  
+
   public boolean getDrawOnlyOneCardIfCantPlay() {
     return drawOnlyOneCardIfCantPlay;
-  }
-  
-  public void setDrawOnlyOneCardIfCantPlay(boolean drawOnlyOneCardIfCantPlay) {
-    this.drawOnlyOneCardIfCantPlay = drawOnlyOneCardIfCantPlay;
   }
 }

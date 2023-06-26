@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class DefaultGame extends Game{
   public DefaultGame(){
-    Options defaultOptions=new Options();
+    Options defaultOptions=new Options.Builder().build();
     setOptions(defaultOptions);
     setPlayersQueue(PlayersQueue.getInstance().getQueue());
   }

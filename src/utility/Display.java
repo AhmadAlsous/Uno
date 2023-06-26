@@ -90,7 +90,7 @@ public class Display {
     StringBuilder c = new StringBuilder();
     c.append(space((cardWidth-1)/2));
     for(int i=1;i<=cardList.size();i++){
-      c.append(i).append(space(cardWidth + 1));
+      c.append(i).append(space(cardWidth + (i < 10 ? 1 : 0)));
     }
     c.append("\n");
     return c.toString();
